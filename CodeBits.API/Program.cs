@@ -4,10 +4,6 @@ using CodeBits.API.Entities;
 using CodeBits.API.Repository;
 using CodeBits.API.Repository.IRepository;
 using CodeBits.API.Utility;
-using FoodStore.Services.AuthAPI.Data;
-using FoodStore.Services.AuthAPI.Models;
-using FoodStore.Services.AuthAPI.Services;
-using FoodStore.Services.AuthAPI.Services.IService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -70,9 +66,9 @@ builder.Services.AddSwaggerGen(option =>
 //=================================================================================================
 // Authentication
 //=================================================================================================
-var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
-var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
-var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
+var secret = builder.Configuration.GetValue<string>("ApiSettings:JwtOptions:Secret");
+var issuer = builder.Configuration.GetValue<string>("ApiSettings:JwtOptions:Issuer");
+var audience = builder.Configuration.GetValue<string>("ApiSettings:JwtOptions:Audience");
 
 var key = Encoding.ASCII.GetBytes(secret);
 

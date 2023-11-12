@@ -27,7 +27,8 @@ namespace CodeBits.API.Repository
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Name, user.Name)
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName)
             };
             claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
             //Token Decripter

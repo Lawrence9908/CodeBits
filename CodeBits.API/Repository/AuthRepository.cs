@@ -63,8 +63,9 @@ namespace CodeBits.API.Repository
             {
                 Email = user.Email,
                 Id = user.Id,
-                Name = user.Name,
                 PhoneNumber = user.PhoneNumber,
+                LastName  = user.LastName,
+                FirstName = user.FirstName,
             };
             LoginResponseDto loginResponseDto = new LoginResponseDto()
             {
@@ -81,7 +82,8 @@ namespace CodeBits.API.Repository
                 UserName = registerRequestDto.Email,
                 Email = registerRequestDto.Email,
                 NormalizedEmail = registerRequestDto.Email.ToUpper(),
-                Name = registerRequestDto.Name,
+                FirstName = registerRequestDto.FirstName,
+                LastName  = registerRequestDto.LastName,
                 PhoneNumber = registerRequestDto.PhoneNumber,
             };
             try
@@ -93,7 +95,8 @@ namespace CodeBits.API.Repository
                     UserDto userDto = new()
                     {
                         Email = userToReturn.Email,
-                        Name = userToReturn.Name,
+                        FirstName = userToReturn.FirstName,
+                        LastName = userToReturn.LastName,
                         Id = userToReturn.Id,
                         PhoneNumber = userToReturn.PhoneNumber,
                     };

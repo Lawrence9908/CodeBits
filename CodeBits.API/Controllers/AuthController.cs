@@ -1,6 +1,7 @@
 ﻿using CodeBits.API.Data;
 using CodeBits.API.Models.Dtos;
 using CodeBits.API.Repository.IRepository;
+using CodeBits.API.Utility;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeBits.API.Controllers
@@ -41,18 +42,18 @@ namespace CodeBits.API.Controllers
             _response.Result = loginResponse;
             return Ok(_response);
         }
-        [HttpPost("AssignRole")]
-        public async Task<IActionResult> AssignRole([FromBody] RegisterRequestDto registerRequestDto)
-        {
-            var assignRoleSuccessful = await _authRepository.AssignRole(registerRequestDto.Email, registerRequestDto.Role.ToUpper());
-            if (assignRoleSuccessful)
-            {
-                _response.IsSuccesss = false;
-                _response.Message = "Error encountered";
-                return BadRequest(_response);
-            }
-            return Ok(_response);
-        }
+        //[HttpPost("AssignRole")]
+        //public async Task<IActionResult> AssignRole([FromBody] RegisterRequestDto registerRequestDto)
+        //{
+        //    var assignRoleSuccessful = await _authRepository.AssignRole(registerRequestDto.Email, Roles.Role_User);
+        //    if (assignRoleSuccessful)
+        //    {
+        //        _response.IsSuccesss = false;
+        //        _response.Message = "Error encountered";
+        //        return BadRequest(_response);
+        //    }
+        //    return Ok(_response);
+        //}
     }
 }
 
