@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeBits.API.Data;
 using CodeBits.API.Entities;
+using AutoMapper;
+using CodeBits.API.Models.Dtos;
 
 namespace CodeBits.API.Controllers
 {
@@ -15,23 +17,27 @@ namespace CodeBits.API.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+             _mapper = mapper;
         }
 
         // GET: api/Category
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<ViewCategoryDto>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            var categories  = await _context.Categories.ToListAsync();
+            return  _mapper.Map<List<ViewCategoryDto>>(categories);
         }
 
         // GET: api/Category/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<ViewCategoryDto>> GetCategory(int id)
         {
+
             var category = await _context.Categories.FindAsync(id);
 
             if (category == null)
@@ -39,20 +45,21 @@ namespace CodeBits.API.Controllers
                 return NotFound();
             }
 
-            return category;
+            return _mapper.Map<ViewCategoryDto>(category);
         }
 
         // PUT: api/Category/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(int id, UpdateCategoryDto model)
         {
-            if (id != category.Id)
+
+            if (id != model.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            var category  = _mapper.Map<Category>(model);
+            _context.Categories.Update(category);
 
             try
             {
@@ -74,10 +81,10 @@ namespace CodeBits.API.Controllers
         }
 
         // POST: api/Category
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(AddCategoryDto model)
         {
+            var category = _mapper.Map<Category>(model);
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
