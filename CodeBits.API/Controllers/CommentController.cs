@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeBits.API.Data;
 using CodeBits.API.Entities;
+using AutoMapper;
+using CodeBits.API.Models.Dtos;
 
 namespace CodeBits.API.Controllers
 {
@@ -15,22 +17,25 @@ namespace CodeBits.API.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CommentController(ApplicationDbContext context)
+        public CommentController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Comment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<ViewCommentDto>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            var comments  = await _context.Comments.ToListAsync();
+            return _mapper.Map<List<ViewCommentDto>>(comments);
         }
 
         // GET: api/Comment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(int id)
+        public async Task<ActionResult<ViewCommentDto>> GetComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
 
@@ -39,20 +44,24 @@ namespace CodeBits.API.Controllers
                 return NotFound();
             }
 
-            return comment;
+            return _mapper.Map<ViewCommentDto>(comment);
         }
 
         // PUT: api/Comment/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
+        public async Task<IActionResult> PutComment(int id,UpdateCommentDto model)
         {
-            if (id != comment.Id)
+            var userId = User.Identity.Name;
+            if (id != model.Id )
             {
                 return BadRequest();
             }
-
-            _context.Entry(comment).State = EntityState.Modified;
+            var comment = _mapper.Map<Comment>(model);
+            if(comment.UserId != userId)
+            {
+               return Unauthorized();
+            }
+            _context.Comments.Update(comment);
 
             try
             {
@@ -74,10 +83,11 @@ namespace CodeBits.API.Controllers
         }
 
         // POST: api/Comment
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult<Comment>> PostComment(AddCommentDto model)
         {
+            var comment = _mapper.Map<Comment>(model);
+            
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 

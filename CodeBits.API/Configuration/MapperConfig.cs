@@ -11,6 +11,13 @@ namespace CodeBits.API.Configuration
             CreateMap<Category, AddCategoryDto>().ReverseMap();
             CreateMap<Category, UpdateCategoryDto>().ReverseMap();
             CreateMap<Category, ViewCategoryDto>().ReverseMap();
+            CreateMap<Comment, AddCommentDto>().ReverseMap();
+            CreateMap<Comment, UpdateCommentDto>().ReverseMap();
+            CreateMap<Comment, ViewCommentDto>().ReverseMap();
+            CreateMap<Article, AddArticleDto>().ReverseMap();
+            CreateMap<Article, UpdateArticleDto>().ReverseMap();
+            CreateMap<Article, ViewArticlerDto>().ReverseMap();
+            CreateMap<UserDto, AppUser>().ReverseMap();
         }
     }
 }
